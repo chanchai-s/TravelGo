@@ -1,0 +1,15 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# env files (ห้าม commit คีย์จริง)
+/.env*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+/src/generated/prisma

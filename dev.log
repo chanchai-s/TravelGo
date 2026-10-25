@@ -1,0 +1,644 @@
+
+> travel@1.0.0 dev
+> next dev --webpack
+
+▲ Next.js 16.4.0 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.101:3000
+- Environments: .env
+✓ Ready in 2.8s
+✓ Running next.config.ts took 388ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+○ Compiling /[locale]/homepage/page ...
+ GET /th/homepage 200 in 19.9s (next.js: 18.7s, proxy.ts: 14ms, application-code: 1184ms)
+○ Compiling /[locale]/bookingdetails/page ...
+ GET /th/bookingdetails 200 in 13.6s (next.js: 12.9s, proxy.ts: 33ms, application-code: 712ms)
+ GET /th/mytrips 200 in 5.8s (next.js: 5.2s, proxy.ts: 9ms, application-code: 647ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+○ Compiling /[locale]/rentcars/page ...
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/rentcars 500 in 13.0s (next.js: 12.3s, proxy.ts: 18ms, application-code: 700ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/media 500 in 2.2s (next.js: 2.1s, proxy.ts: 15ms, application-code: 87ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/promotions 500 in 2.8s (next.js: 2.7s, proxy.ts: 12ms, application-code: 70ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/flight 500 in 9.4s (next.js: 9.2s, proxy.ts: 62ms, application-code: 108ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/transport 500 in 6.8s (next.js: 6.7s, proxy.ts: 24ms, application-code: 79ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/plan 500 in 2.5s (next.js: 2.3s, proxy.ts: 54ms, application-code: 60ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/host 500 in 3.2s (next.js: 3.2s, proxy.ts: 9ms, application-code: 36ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/admin 500 in 3.2s (next.js: 3.1s, proxy.ts: 15ms, application-code: 32ms)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th 500 in 13.6s (next.js: 13.4s, proxy.ts: 44ms, application-code: 134ms)
+[browser] Uncaught Error: Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+
+    at Error: Module not found: Can't resolve '. (resources/data')
+    at > 4 | import { VEHICLES, RENTAL_RULES } from ". (resources/data";)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+ GET /favicon.ico 500 in 31ms
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/rentcar 500 in 4.4s (next.js: 4.2s, proxy.ts: 61ms, application-code: 137ms)
+ GET /th/rentcars 500 in 3.4s (next.js: 3.2s, proxy.ts: 23ms, application-code: 138ms)
+[browser] Uncaught Error: Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+
+    at Error: Module not found: Can't resolve '. (resources/data')
+    at > 4 | import { VEHICLES, RENTAL_RULES } from ". (resources/data";)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+ GET /favicon.ico 500 in 6ms
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /th/rentcars 500 in 6.5s (next.js: 6.2s, proxy.ts: 102ms, application-code: 160ms)
+[browser] Uncaught Error: Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+
+    at Error: Module not found: Can't resolve '. (resources/data')
+    at > 4 | import { VEHICLES, RENTAL_RULES } from ". (resources/data";)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+⨯ ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found
+ GET /favicon.ico 500 in 25ms
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./src/app/[locale]/rentcars/page.tsx:4:1
+Module not found: Can't resolve '.@resources/data'
+  2 |
+  3 | import { useMemo, useState } from "react";
+> 4 | import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+    | ^
+  5 |
+  6 | const CATEGORY_FILTERS = [
+  7 |   { id: "ALL", label: "All Cars" },
+
+https://nextjs.org/docs/messages/module-not-found 

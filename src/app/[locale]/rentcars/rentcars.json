@@ -1,0 +1,168 @@
+{
+  "name": "rentcars",
+  "version": "1.0.0",
+  "description": "MCP Server for RentCars - Car Rental & Ride-Hailing Platform (WanderGo)",
+  "author": "WanderGo Team",
+  "license": "MIT",
+  "keywords": ["mcp", "car-rental", "ride-hailing", "vehicle-booking", "fleet-management", "transport"],
+  "capabilities": {
+    "tools": {
+      "search_vehicles": {
+        "description": "Search vehicles with filters (location, dates, category, price, seats, features)",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "pickupLocation": { "type": "string" },
+            "dropoffLocation": { "type": "string" },
+            "pickupAt": { "type": "string", "format": "date-time" },
+            "dropoffAt": { "type": "string", "format": "date-time" },
+            "category": {
+              "type": "string",
+              "enum": ["ECONOMY", "COMPACT_SUV", "SEDAN", "LUXURY_SEDAN", "VAN", "PICKUP_TRUCK"]
+            },
+            "priceMin": { "type": "number" },
+            "priceMax": { "type": "number" },
+            "features": { "type": "array", "items": { "type": "string" } },
+            "seats": { "type": "number", "minimum": 1, "maximum": 12 },
+            "transmission": { "type": "string", "enum": ["AUTO", "MANUAL"] },
+            "fuelType": { "type": "string", "enum": ["PETROL", "DIESEL", "HYBRID", "EV"] },
+            "page": { "type": "integer", "minimum": 1, "default": 1 },
+            "limit": { "type": "integer", "minimum": 1, "maximum": 50, "default": 20 }
+          },
+          "required": ["pickupAt", "dropoffAt"]
+        }
+      },
+      "get_vehicle_details": {
+        "description": "Get detailed information about a specific vehicle",
+        "inputSchema": {
+          "type": "object",
+          "properties": { "vehicleId": { "type": "string" } },
+          "required": ["vehicleId"]
+        }
+      },
+      "create_rental_booking": {
+        "description": "Create a new rental booking with full price breakdown",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "vehicleId": { "type": "string" },
+            "pickupAt": { "type": "string", "format": "date-time" },
+            "dropoffAt": { "type": "string", "format": "date-time" },
+            "pickupLocation": { "type": "string" },
+            "dropoffLocation": { "type": "string" },
+            "driverInfo": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "licenseNumber": { "type": "string" },
+                "phone": { "type": "string" },
+                "email": { "type": "string" },
+                "dateOfBirth": { "type": "string", "format": "date" }
+              },
+              "required": ["name", "licenseNumber", "phone"]
+            },
+            "insuranceType": {
+              "type": "string",
+              "enum": ["BASIC", "FULL", "PREMIUM", "NONE"],
+              "default": "FULL"
+            },
+            "fuelPolicy": {
+              "type": "string",
+              "enum": ["FULL_TO_FULL", "PREPAID", "SAME_TO_SAME"],
+              "default": "FULL_TO_FULL"
+            },
+            "addOns": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["CHILD_SEAT", "GPS", "ADDITIONAL_DRIVER", "WIFI", "ROADSIDE_ASSISTANCE"]
+              }
+            },
+            "notes": { "type": "string" }
+          },
+          "required": ["vehicleId", "pickupAt", "dropoffAt", "pickupLocation", "dropoffLocation"]
+        }
+      },
+      "get_my_bookings": {
+        "description": "Get current user's rental bookings",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "userId": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": ["PENDING", "ACCEPTED", "DRIVER_ARRIVED", "IN_PROGRESS", "COMPLETED", "CANCELLED"]
+            },
+            "page": { "type": "integer", "minimum": 1, "default": 1 },
+            "limit": { "type": "integer", "minimum": 1, "maximum": 50, "default": 20 }
+          },
+          "required": ["userId"]
+        }
+      },
+      "switch_mode": {
+        "description": "Switch between Car Rental and Ride-Hailing mode",
+        "inputSchema": {
+          "type": "object",
+          "properties": { "mode": { "type": "string", "enum": ["rental", "ride"] } },
+          "required": ["mode"]
+        }
+      },
+      "filter_vehicles": {
+        "description": "Filter vehicles by category, price, features, seats, transmission or fuel type",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": ["ECONOMY", "COMPACT_SUV", "SEDAN", "LUXURY_SEDAN", "VAN", "PICKUP_TRUCK"]
+            },
+            "priceMin": { "type": "number" },
+            "priceMax": { "type": "number" },
+            "features": { "type": "array", "items": { "type": "string" } },
+            "seats": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "transmission": { "type": "string", "enum": ["AUTO", "MANUAL"] },
+            "fuelType": { "type": "string", "enum": ["PETROL", "DIESEL", "HYBRID", "EV"] }
+          }
+        }
+      }
+    },
+    "resources": [
+      {
+        "uri": "vehicles://catalog",
+        "name": "Vehicle Catalog",
+        "description": "Complete vehicle catalog with filter metadata",
+        "mimeType": "application/json"
+      },
+      {
+        "uri": "vehicles://{id}",
+        "name": "Vehicle Details",
+        "description": "Detailed information about a specific vehicle",
+        "mimeType": "application/json"
+      },
+      {
+        "uri": "rental-rules://{category}",
+        "name": "Rental Rules by Category",
+        "description": "Business rules per vehicle category",
+        "mimeType": "application/json"
+      },
+      {
+        "uri": "fleet-partners://list",
+        "name": "Fleet Partners",
+        "description": "List of fleet partners (AVIS, Hertz, Sixt, local operators)",
+        "mimeType": "application/json"
+      },
+      {
+        "uri": "rental-rules://insurance",
+        "name": "Insurance Options",
+        "description": "Insurance options (BASIC, FULL, PREMIUM)",
+        "mimeType": "application/json"
+      },
+      {
+        "uri": "rental-rules://fuel-policy",
+        "name": "Fuel Policy Options",
+        "description": "Fuel policy options (FULL_TO_FULL, PREPAID, SAME_TO_SAME)",
+        "mimeType": "application/json"
+      }
+    ]
+  }
+}

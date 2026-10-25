@@ -1,0 +1,22 @@
+{
+  "name": "rentcars-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server for RentCars - Car Rental & Ride-Hailing Platform",
+  "main": "rentcars.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.mcp.json",
+    "dev": "tsx watch rentcars.ts",
+    "start": "node dist/rentcars.js",
+    "inspect": "mcp-inspector dist/rentcars.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "typescript": "^5.4.0",
+    "tsx": "^4.7.0"
+  }
+}

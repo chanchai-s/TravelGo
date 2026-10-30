@@ -278,3 +278,50 @@ export const apiUploadMedia = (file: File) => {
 export const apiToggleMediaLike = (id: string) => mainApi.post(`/media/${id}/like`);
 export const apiGetMediaComments = (id: string) => mainApi.get(`/media/${id}/comments`);
 export const apiAddMediaComment = (id: string, text: string) => mainApi.post(`/media/${id}/comments`, { text });
+
+// ---------- รถเช่า (RentCars) ----------
+
+export type VehicleSearchApiParams = {
+  q?: string;
+  category?: string;
+  branchId?: string;
+  pickupAt?: string;
+  dropoffAt?: string;
+  transmission?: string;
+  minSeats?: number;
+  maxPrice?: number;
+  page?: number;
+  size?: number;
+};
+
+export type CreateRentalBookingInput = {
+  vehicleId: string;
+  pickupAt: string;
+  dropoffAt: string;
+  driverName?: string;
+  driverPhone?: string;
+  driverLicenseNo?: string;
+  notes?: string;
+};
+
+export const apiListVehicleCategories = () => mainApi.get("/vehicle-categories");
+
+export const apiSearchVehicles = (params: VehicleSearchApiParams) =>
+  mainApi.get("/vehicles", { params });
+
+export const apiGetVehicle = (id: string) => mainApi.get(`/vehicles/${id}`);
+
+export const apiCheckVehicleAvailability = (
+  id: string,
+  pickupAt: string,
+  dropoffAt: string,
+) => mainApi.get(`/vehicles/${id}/availability`, { params: { pickupAt, dropoffAt } });
+
+export const apiQuoteVehicle = (id: string, pickupAt: string, dropoffAt: string) =>
+  mainApi.post(`/vehicles/${id}/quote`, { pickupAt, dropoffAt });
+
+export const apiCreateRentalBooking = (data: CreateRentalBookingInput) =>
+  mainApi.post("/bookings/rental", data);
+
+export const apiCancelRentalBooking = (bookingId: string) =>
+  mainApi.post(`/bookings/rental/${bookingId}/cancel`);

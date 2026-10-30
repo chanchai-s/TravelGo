@@ -4,6 +4,10 @@
 # next.js
 /.next/
 /out/
+/dist/
+
+# logs
+/dev-run.log
 
 # env files (ห้าม commit คีย์จริง)
 /.env*

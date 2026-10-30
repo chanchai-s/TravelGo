@@ -6,11 +6,11 @@ const defaultLocale = 'th' as const;
 
 function getLocale(request: NextRequest): string {
   const pathname = request.nextUrl.pathname;
-  
+
   // ตรวจสอบว่ามี locale ใน path หรือไม่
   const pathnameSegments = pathname.split('/');
   const locale = pathnameSegments[1];
-  
+
   if (locales.includes(locale as any)) {
     return locale as typeof defaultLocale;
   }
@@ -19,9 +19,9 @@ function getLocale(request: NextRequest): string {
   return defaultLocale;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  
+
   // ข้ามไฟล์ static และ API routes
   if (
     pathname.startsWith('/_next') ||

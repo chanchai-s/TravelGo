@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { VEHICLES, RENTAL_RULES } from ".@resources/data";
+import { VEHICLES, RENTAL_RULES } from "./resources/data";
 
 const CATEGORY_FILTERS = [
   { id: "ALL", label: "All Cars" },

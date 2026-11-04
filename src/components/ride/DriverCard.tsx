@@ -12,15 +12,8 @@ export function DriverCard({
   onChat?: () => void;
 }) {
   if (!job.driver) {
-    return (
-      <div className="flex items-center gap-3 rounded-2xl bg-surface-container-low p-4">
-        <span className="material-symbols-outlined animate-pulse text-[26px] text-primary">person_search</span>
-        <div>
-          <p className="font-label-md text-label-md font-semibold text-on-surface">กำลังหาคนขับให้</p>
-          <p className="font-body-sm text-body-sm text-tertiary">โดยปกติใช้เวลา 1–3 นาที</p>
-        </div>
-      </div>
-    );
+    // งานที่จบ/ยกเลิกแล้วไม่ควรขึ้นสถานะกำลังหาคนขับ
+    return null;
   }
 
   const vehicle = job.vehicle;

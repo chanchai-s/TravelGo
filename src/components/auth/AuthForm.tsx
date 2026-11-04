@@ -10,20 +10,24 @@ const inputClass =
 
 function nextTarget(): string {
   if (typeof window === "undefined") {
-    return "/ride";
+    return "/homepage";
   }
   const next = new URLSearchParams(window.location.search).get("next");
-  return next !== null && next.startsWith("/") && !next.startsWith("//") ? next : "/ride";
+  return next !== null && next.startsWith("/") && !next.startsWith("//") ? next : "/homepage";
 }
 
-export function AuthForm() {
+export function AuthForm({
+  initialMode = "login",
+}: {
+  initialMode?: "login" | "register";
+}) {
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
   const register = useAuthStore((state) => state.register);
   const busy = useAuthStore((state) => state.busy);
   const error = useAuthStore((state) => state.error);
 
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register">(initialMode);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -203,7 +207,7 @@ export function AuthForm() {
           className="flex items-center justify-between rounded-xl bg-surface-container-low px-3 py-2.5"
         >
           <span className="flex items-center gap-2 font-label-md text-label-md font-semibold text-on-surface">
-            <span className="material-symbols-outlined text-[20px] text-primary">steering_wheel</span>
+            <span className="material-symbols-outlined text-[20px] text-primary">directions_car</span>
             สมัครเป็นคนขับ
           </span>
           <span className="material-symbols-outlined text-[18px] text-tertiary">chevron_right</span>

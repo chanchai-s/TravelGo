@@ -26,9 +26,18 @@ export function Sidebar() {
     }
   }, [ready]);
 
-  // ซ่อนปุ่ม Login เมื่อเข้าสู่ระบบแล้ว — โปรไฟล์อยู่ในเมนู Profile
-  const items = token === null ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.id !== "login");
-  const activeItem = items
+  // Desktop: Login อยู่ในเมนูเฉพาะจอ md–lg (จอกว้างขึ้นไปย้ายไปเป็นปุ่มขวาสุด)
+  const loggedOut = ready && token === null;
+  const onAuthPage = pathname === "/login" || pathname === "/register";
+  const showAuthButtons = loggedOut && !onAuthPage;
+  const desktopItems = NAV_ITEMS.filter(
+    (item) => item.id !== "login" || loggedOut,
+  );
+  // Mobile ยังต้องมีทางเข้า login ในแถบล่างเมื่อยังไม่เข้าสู่ระบบ
+  const mobileItems = loggedOut
+    ? NAV_ITEMS
+    : NAV_ITEMS.filter((item) => item.id !== "login");
+  const activeItem = mobileItems
     .filter((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))
     .sort((a, b) => b.href.length - a.href.length)[0];
 
@@ -43,7 +52,7 @@ export function Sidebar() {
             </span>
           </Link>
           <nav className="flex items-center gap-1">
-            {items.map((item) => {
+            {desktopItems.map((item) => {
               const active = item.href !== "#" && activeItem?.id === item.id;
               return (
                 <Link
@@ -51,6 +60,8 @@ export function Sidebar() {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={`flex items-center gap-2 rounded-xl px-3 py-2.5 font-label-md text-label-md transition-colors ${
+                    item.id === "login" ? "lg:hidden" : ""
+                  } ${
                     active
                       ? "bg-primary-fixed font-semibold text-on-primary-fixed-variant"
                       : "text-tertiary hover:bg-surface-container-low hover:text-on-surface"
@@ -72,14 +83,33 @@ export function Sidebar() {
               );
             })}
           </nav>
-          <LanguageSwitcher />
+
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            {showAuthButtons ? (
+              <div className="hidden items-center gap-2 lg:flex">
+                <Link
+                  href="/login"
+                  className="flex h-10 items-center rounded-xl border border-outline-variant px-3.5 font-label-md text-label-md font-semibold text-on-surface transition-colors hover:bg-surface-container-low"
+                >
+                  เข้าสู่ระบบ
+                </Link>
+                <Link
+                  href="/register"
+                  className="flex h-10 items-center rounded-xl bg-secondary-container px-3.5 font-label-md text-label-md font-bold text-on-secondary shadow-sm transition-all hover:brightness-95"
+                >
+                  สมัครสมาชิก
+                </Link>
+              </div>
+            ) : null}
+          </div>
         </div>
       </header>
 
       {/* Mobile bottom nav (from design) */}
       <nav className="fixed inset-x-0 bottom-0 z-50 bg-surface-container-lowest/90 pb-safe shadow-[0_-2px_12px_rgba(15,23,42,0.06)] backdrop-blur-xl md:hidden">
         <div className="mx-auto flex h-16 max-w-md items-center justify-around px-space-xs">
-          {items.map((item) => {
+          {mobileItems.map((item) => {
             const active = item.href !== "#" && activeItem?.id === item.id;
             return (
               <Link

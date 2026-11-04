@@ -270,7 +270,7 @@ export default function ProfilePage() {
           href="/driver/status"
           className="flex items-center gap-2 rounded-2xl bg-surface-container-lowest p-3 shadow-sm"
         >
-          <span className="material-symbols-outlined text-[20px] text-primary">steering_wheel</span>
+          <span className="material-symbols-outlined text-[20px] text-primary">directions_car</span>
           <span className="font-label-md text-label-md text-on-surface">สถานะคนขับ</span>
         </Link>
         <Link

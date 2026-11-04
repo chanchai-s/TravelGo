@@ -112,16 +112,38 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
       setActive(null);
       setMessage("Google ปฏิเสธการเข้าสู่ระบบ");
     },
+    // ป๊อปอัปถูกบล็อก/ปิดก่อนเสร็จ — ไม่ใช่ error จาก Google แต่ผู้ใช้ควรรู้
+    onNonOAuthError: (error) => {
+      setActive(null);
+      setMessage(
+        error.type === "popup_closed"
+          ? ""
+          : "เบราว์เซอร์บล็อกหน้าต่างเข้าสู่ระบบของ Google กรุณาอนุญาตป๊อปอัปแล้วลองใหม่",
+      );
+    },
   });
 
   const handleGoogle = () => {
     setMessage("");
+    if (GOOGLE_CLIENT_ID === "") {
+      setMessage("ยังไม่ได้ตั้งค่า NEXT_PUBLIC_GOOGLE_CLIENT_ID ในไฟล์ .env");
+      return;
+    }
+    // ยังโหลด GSI ไม่เสร็จ (มักเกิดช่วง hydrate ครั้งแรก) — กดตอนนี้จะเงียบไม่มีอะไรเกิดขึ้น
+    if (!("google" in window)) {
+      setMessage("กำลังโหลด Google กรุณารอสักครู่แล้วกดอีกครั้ง");
+      return;
+    }
     setActive("GOOGLE");
     googleLogin();
   };
 
   const handleFacebook = async () => {
     setMessage("");
+    if (FACEBOOK_APP_ID === "") {
+      setMessage("ยังไม่ได้ตั้งค่า NEXT_PUBLIC_FACEBOOK_APP_ID ในไฟล์ .env");
+      return;
+    }
     setActive("FACEBOOK");
     try {
       await loadScript("facebook-jssdk", "https://connect.facebook.net/th_TH/sdk.js");
@@ -149,6 +171,10 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
 
   const handleApple = async () => {
     setMessage("");
+    if (APPLE_SERVICE_ID === "") {
+      setMessage("ยังไม่ได้ตั้งค่า NEXT_PUBLIC_APPLE_SERVICE_ID ในไฟล์ .env");
+      return;
+    }
     setActive("APPLE");
     try {
       await loadScript(
@@ -180,6 +206,10 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
 
   const handleLine = () => {
     setMessage("");
+    if (LINE_CHANNEL_ID === "") {
+      setMessage("ยังไม่ได้ตั้งค่า NEXT_PUBLIC_LINE_CHANNEL_ID ในไฟล์ .env");
+      return;
+    }
     const state =
       typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
         ? crypto.randomUUID()
@@ -205,7 +235,6 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
     label: string;
     icon: React.ReactNode;
     color: string;
-    enabled: boolean;
     onClick: () => void;
   }[] = [
     {
@@ -213,7 +242,6 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
       label: "ดำเนินการต่อด้วย Google",
       icon: <FcGoogle />,
       color: "",
-      enabled: GOOGLE_CLIENT_ID !== "",
       onClick: handleGoogle,
     },
     {
@@ -221,7 +249,6 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
       label: "ดำเนินการต่อด้วย Facebook",
       icon: <FaFacebook />,
       color: "#1877F2",
-      enabled: FACEBOOK_APP_ID !== "",
       onClick: () => void handleFacebook(),
     },
     {
@@ -229,7 +256,6 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
       label: "ดำเนินการต่อด้วย Apple",
       icon: <FaApple />,
       color: "#111111",
-      enabled: APPLE_SERVICE_ID !== "",
       onClick: () => void handleApple(),
     },
     {
@@ -237,7 +263,6 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
       label: "ดำเนินการต่อด้วย LINE",
       icon: <FaLine />,
       color: "#06C755",
-      enabled: LINE_CHANNEL_ID !== "",
       onClick: handleLine,
     },
   ];
@@ -253,7 +278,7 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
             key={provider.id}
             type="button"
             onClick={provider.onClick}
-            disabled={disabled || !provider.enabled}
+            disabled={disabled}
             className="relative flex h-12 w-full items-center justify-center rounded-xl border border-outline-variant bg-surface-container-lowest px-11 font-label-md text-label-md font-semibold text-on-surface shadow-sm transition-colors hover:bg-surface-container-low disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span
@@ -266,11 +291,6 @@ export function SocialButtons({ onSuccess }: { onSuccess: () => void }) {
             {isActive ? (
               <span className="material-symbols-outlined absolute right-3.5 animate-spin text-[18px]">
                 progress_activity
-              </span>
-            ) : null}
-            {!provider.enabled ? (
-              <span className="absolute right-3 rounded-full bg-surface-container-high px-2 py-0.5 font-label-sm text-[10px] font-bold text-on-surface-variant">
-                เร็ว ๆ นี้
               </span>
             ) : null}
           </button>

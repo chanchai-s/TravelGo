@@ -57,8 +57,24 @@ export const apiUpdateProfile = (
   config?: AxiosRequestConfig,
 ) => mainApi.put("/auth/me", payload, config);
 
-export const apiGoogleLogin = (data: Record<string, unknown>) =>
-  mainApi.post("/google/create", data);
+// ---------- Social login (Google / Facebook / Apple / LINE) ----------
+
+export type SocialProvider = "GOOGLE" | "FACEBOOK" | "APPLE" | "LINE";
+
+export type SocialLoginPayload = {
+  provider: SocialProvider;
+  /** Google / Facebook ส่ง access token มาให้ตรวจกับ API ของเจ้านั้น */
+  accessToken?: string;
+  /** Apple ส่ง id_token (JWT ที่ Apple ลงนาม) */
+  idToken?: string;
+  /** LINE / Google (auth-code) ส่ง code มาแลก token ที่ฝั่งเซิร์ฟเวอร์ */
+  code?: string;
+  redirectUri?: string;
+  state?: string;
+};
+
+export const apiSocialLogin = (data: SocialLoginPayload) =>
+  mainApi.post("/auth/social", data);
 
 export const apiSearchHotels = (params: SearchHotelParams) =>
   mainApi.post("/rabit/search", params);

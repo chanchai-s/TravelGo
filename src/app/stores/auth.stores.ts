@@ -1,7 +1,11 @@
 "use client";
 
 import { create } from "zustand";
-import { mainApi } from "@/app/Api/mainApi";
+import {
+  apiSocialLogin,
+  mainApi,
+  type SocialLoginPayload,
+} from "@/app/Api/mainApi";
 
 /** สถานะล็อกอินของผู้ใช้ (ใช้ร่วมทั้ง rider และ driver — บัญชีเดียว) */
 
@@ -22,6 +26,7 @@ type AuthState = {
   error: string;
   init: () => Promise<void>;
   login: (email: string, password: string) => Promise<AuthUser | null>;
+  socialLogin: (payload: SocialLoginPayload) => Promise<AuthUser | null>;
   register: (data: {
     name: string;
     email: string;
@@ -86,6 +91,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const res = await mainApi.post("/auth/login", { email, password });
       const token = res.data?.token as string | undefined;
+      const user = res.data?.user as AuthUser | undefined;
+      if (!token || !user) {
+        throw new Error("ไม่ได้รับ token จากเซิร์ฟเวอร์");
+      }
+      saveToken(token);
+      set({ token, user, busy: false, ready: true });
+      return user;
+    } catch (error) {
+      set({ busy: false, error: messageOf(error, "เข้าสู่ระบบไม่สำเร็จ") });
+      return null;
+    }
+  },
+
+  // ล็อกอินผ่านผู้ให้บริการภายนอก — รับได้ทั้ง accessToken / idToken / code
+  socialLogin: async (payload) => {
+    set({ busy: true, error: "" });
+    try {
+      const res = await apiSocialLogin(payload);
+      const token = (res.data?.token ?? res.data?.accessToken) as string | undefined;
       const user = res.data?.user as AuthUser | undefined;
       if (!token || !user) {
         throw new Error("ไม่ได้รับ token จากเซิร์ฟเวอร์");

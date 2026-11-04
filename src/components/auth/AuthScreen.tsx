@@ -38,7 +38,7 @@ export function AuthScreen({
         </p>
       </div>
 
-      <AuthForm initialMode={mode} />
+      <AuthForm mode={mode} />
     </main>
   );
 }

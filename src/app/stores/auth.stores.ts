@@ -16,6 +16,8 @@ export type AuthUser = {
   phone?: string | null;
   role?: "USER" | "ADMIN" | "OWNER" | null;
   hasPassword?: boolean;
+  /** รูปโปรไฟล์ — มาจากผู้ให้บริการก่อน (Google) */
+  avatarUrl?: string | null;
 };
 
 type AuthState = {

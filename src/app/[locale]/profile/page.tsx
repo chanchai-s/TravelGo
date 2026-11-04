@@ -41,6 +41,12 @@ export default function ProfilePage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  // รูปจาก Google โหลดไม่ขึ้น (เช่น URL หมดอายุ) → กลับไปใช้ตัวอักษรแรก
+  const [avatarFailed, setAvatarFailed] = useState(false);
+
+  useEffect(() => {
+    setAvatarFailed(false);
+  }, [user?.avatarUrl]);
 
   useEffect(() => {
     if (!ready) {
@@ -156,9 +162,22 @@ export default function ProfilePage() {
       </p>
 
       <section className="mt-3 flex items-center gap-3 rounded-2xl bg-surface-container-lowest p-4 shadow-sm">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary font-headline-sm text-headline-sm font-bold text-on-primary">
-          {user?.name?.charAt(0) ?? "U"}
-        </div>
+        {user?.avatarUrl !== undefined &&
+        user.avatarUrl !== null &&
+        user.avatarUrl !== "" &&
+        !avatarFailed ? (
+          <img
+            src={user.avatarUrl}
+            alt={user?.name ?? "รูปโปรไฟล์"}
+            className="h-14 w-14 shrink-0 rounded-full bg-surface-container object-cover"
+            referrerPolicy="no-referrer"
+            onError={() => setAvatarFailed(true)}
+          />
+        ) : (
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary font-headline-sm text-headline-sm font-bold text-on-primary">
+            {user?.name?.charAt(0) ?? "U"}
+          </div>
+        )}
         <div className="min-w-0 flex-1">
           <p className="truncate font-label-lg text-label-lg font-bold text-on-surface">
             {user?.name ?? "-"}

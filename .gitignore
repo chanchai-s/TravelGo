@@ -8,6 +8,7 @@
 
 # logs
 /dev-run.log
+/dev-verify.log
 
 # env files (ห้าม commit คีย์จริง)
 /.env*

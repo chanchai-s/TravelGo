@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 /** bottom sheet มาตรฐานของ ride — mobile ขึ้นจากล่าง, desktop กลายเป็น modal กลางจอ */
 export function BottomSheet({
@@ -18,6 +18,18 @@ export function BottomSheet({
   children: ReactNode;
   footer?: ReactNode;
 }) {
+  // ล็อกการเลื่อนฉากหลังระหว่างเปิด sheet และคืนค่าเดิมเมื่อปิด
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
   if (!open) {
     return null;
   }
@@ -30,7 +42,7 @@ export function BottomSheet({
         onClick={onClose}
         className="absolute inset-0 bg-on-surface/40 backdrop-blur-[2px]"
       />
-      <div className="relative flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-surface-container-lowest shadow-2xl md:rounded-3xl">
+      <div className="relative flex max-h-[90dvh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-surface-container-lowest shadow-2xl md:rounded-3xl">
         <div className="flex items-start justify-between gap-3 px-5 pb-3 pt-4">
           <div className="min-w-0">
             {title ? (
@@ -48,7 +60,9 @@ export function BottomSheet({
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-4">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-4">
+          {children}
+        </div>
         {footer ? <div className="border-t border-outline-variant/40 px-5 py-3 pb-safe">{footer}</div> : null}
       </div>
     </div>

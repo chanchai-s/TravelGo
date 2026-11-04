@@ -124,7 +124,7 @@ export default function AdminPage() {
   ];
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-margin py-4 md:py-8">
+    <main className="mx-auto w-full max-w-6xl px-margin py-4 md:py-8">
       <h1 className="font-headline-md text-headline-md font-extrabold tracking-tight text-on-surface">
         หลังบ้านสำหรับแอดมิน
       </h1>

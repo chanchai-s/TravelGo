@@ -3,7 +3,7 @@ import { TransportExplorer } from "@/components/TransportExplorer";
 
 export default function TransportPage() {
   return (
-    <main className="mx-auto w-full max-w-5xl px-margin py-4 md:py-8">
+    <main className="mx-auto w-full max-w-6xl px-margin py-4 md:py-8">
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-space-sm">

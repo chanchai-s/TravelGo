@@ -3,7 +3,7 @@ import { HOTEL_SUBTYPES } from "@/data/hostTypes";
 
 export default function HostHotelPage() {
   return (
-    <main className="mx-auto w-full max-w-5xl px-margin py-4 md:py-8">
+    <main className="mx-auto w-full max-w-6xl px-margin py-4 md:py-8">
       <Link
         href="/host"
         className="inline-flex items-center gap-1 font-label-md text-label-md font-bold text-primary"

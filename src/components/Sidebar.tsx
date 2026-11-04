@@ -36,7 +36,7 @@ export function Sidebar() {
     <>
       {/* Desktop top bar (web) */}
       <header className="fixed inset-x-0 top-0 z-40 hidden bg-surface-container-lowest shadow-[0_2px_8px_rgba(15,23,42,0.06)] md:block">
-        <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-margin">
+        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-margin">
           <Link href="/homepage" className="flex items-center gap-3">
             <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
               WanderGo

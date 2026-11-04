@@ -374,7 +374,7 @@ export default function RidePage() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-md px-margin pb-28 pt-3 md:max-w-5xl md:pb-10">
+    <main className="mx-auto w-full max-w-md px-margin pb-28 pt-3 md:max-w-6xl md:pb-10">
       <div className="flex items-center justify-between">
         <div>
           <p className="font-label-sm text-label-sm uppercase tracking-wider text-tertiary">

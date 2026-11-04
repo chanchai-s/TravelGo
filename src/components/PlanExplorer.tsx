@@ -267,7 +267,7 @@ export function PlanExplorer() {
 
       {/* Sticky Checkout Bar */}
       <div className="fixed inset-x-4 bottom-24 z-40 bg-surface-container-lowest/95 px-margin py-3 shadow-xl backdrop-blur-xl md:bottom-6">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
               <span className="font-headline-sm text-headline-sm font-extrabold text-on-surface">

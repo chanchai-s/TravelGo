@@ -109,7 +109,7 @@ function AdminRidesPageInner() {
   const activeCount = items.filter((job) => ACTIVE_STATUSES.includes(job.status)).length;
 
   return (
-    <main className="mx-auto w-full max-w-md px-margin pb-24 pt-3 md:max-w-5xl">
+    <main className="mx-auto w-full max-w-md px-margin pb-24 pt-3 md:max-w-6xl">
       <div className="flex items-center justify-between">
         <div>
           <p className="font-label-sm text-label-sm uppercase tracking-wider text-tertiary">

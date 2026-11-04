@@ -251,7 +251,7 @@ export default async function BookingDetailPage({
   const reviews = await fetchReviews(id);
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-margin py-4 md:py-8">
+    <main className="mx-auto w-full max-w-6xl px-margin py-4 md:py-8">
       <nav className="flex items-center gap-1 font-body-sm text-body-sm text-tertiary">
         <Link href="/bookingdetails" className="hover:text-primary">
           All properties

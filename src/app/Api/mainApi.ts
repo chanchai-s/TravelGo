@@ -325,3 +325,251 @@ export const apiCreateRentalBooking = (data: CreateRentalBookingInput) =>
 
 export const apiCancelRentalBooking = (bookingId: string) =>
   mainApi.post(`/bookings/rental/${bookingId}/cancel`);
+
+// ---------- Ride / Parcel / Logistics (โดเมนแยกจาก transport) ----------
+
+export type RideServiceType = "RIDE" | "PARCEL" | "LOGISTICS";
+export type RidePaymentTiming = "PREPAY" | "POSTPAY";
+export type RidePaymentMethod = "CARD" | "PROMPTPAY" | "WALLET" | "CASH" | "TRANSFER";
+
+export type RideTier = {
+  id: string;
+  code: string;
+  name: string;
+  serviceType: RideServiceType;
+  vehicleType: string;
+  seats: number | null;
+  maxWeightKg: number | null;
+  maxDimCm: string | null;
+  baseFare: number;
+  perKm: number;
+  perMin: number;
+  minFare: number;
+  flatFare: number | null;
+  includedKm: number | null;
+  description: string | null;
+  imageUrl: string | null;
+  sortOrder: number;
+  isActive: boolean;
+};
+
+export type RidePoint = { lat: number; lng: number; address: string };
+
+export type RideQuote = {
+  serviceType: RideServiceType;
+  tier: {
+    code: string;
+    name: string;
+    vehicleType: string;
+    seats: number | null;
+    maxWeightKg: number | null;
+    maxDimCm: string | null;
+    imageUrl: string | null;
+    description: string | null;
+  };
+  pickup: RidePoint;
+  dropoff: RidePoint;
+  distanceKm: number;
+  durationMin: number;
+  passengerCount: number | null;
+  parcel: { weightKg: number; sizeTier: "S" | "M" | "L" | "XL" } | null;
+  addons: { type: string; name: string; amount: number; qty: number }[];
+  breakdown: {
+    baseFare: number;
+    parcelSizeFee: number;
+    parcelWeightFee: number;
+    addonTotal: number;
+    baseAmount: number;
+    vatRate: number;
+    vatAmount: number;
+    totalFare: number;
+  };
+  commissionRate: number;
+  commission: number;
+  netToDriver: number;
+  paymentOptions: { timing: RidePaymentTiming; method: RidePaymentMethod; label: string }[];
+  policy: { fixedFare: string; zeroSurge: string };
+};
+
+export type RideJob = {
+  id: string;
+  ref: string;
+  serviceType: RideServiceType;
+  tierCode: string;
+  status: string;
+  riderId: string;
+  driverId: string | null;
+  passengerCount: number | null;
+  pickupLat: number;
+  pickupLng: number;
+  pickupAddress: string;
+  dropoffLat: number;
+  dropoffLng: number;
+  dropoffAddress: string;
+  distanceKm: number;
+  durationMin: number;
+  baseFare: number;
+  addonTotal: number;
+  vatAmount: number;
+  fareEstimate: number;
+  fareFinal: number | null;
+  commissionRate: number | null;
+  commission: number;
+  netToDriver: number;
+  paymentTiming: RidePaymentTiming;
+  paymentMethod: RidePaymentMethod;
+  paymentStatus: string;
+  requestedAt: string;
+  acceptedAt: string | null;
+  arrivedAt: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  cancelledAt: string | null;
+  cancelReason: string | null;
+  cancelBy: string | null;
+  actions: string[];
+  pickupDistanceKm?: number | null;
+  tier: RideTier | { code: string; name: string };
+  rider?: { id: string; name: string; phone: string | null } | null;
+  driver?: { id: string; name: string; phone: string | null } | null;
+  addons: { id: string; type: string; name: string; amount: number; qty: number }[];
+  parcel?: {
+    jobId: string;
+    weightKg: number;
+    sizeTier: string;
+    isFragile: boolean;
+    receiverName: string;
+    receiverPhone: string;
+    note: string | null;
+    deliveryOtp: string | null;
+    pickupOtp: string | null;
+    proofPhotoUrl: string | null;
+    codAmount: number;
+  } | null;
+  payments: { id: string; timing: string; method: string; status: string; amount: number }[];
+  earning?: { gross: number; commission: number; net: number; status: string } | null;
+  rating?: { stars: number; text: string | null } | null;
+  sosEvents?: { id: string; status: string }[];
+  tracking?: { lat: number; lng: number; recordedAt: string } | null;
+  vehicle?: { brand: string | null; model: string | null; plateNo: string | null; color: string | null } | null;
+};
+
+export type SavedAddress = {
+  id: string;
+  label: string;
+  address: string;
+  lat: number;
+  lng: number;
+  isDefault: boolean;
+};
+
+export const apiRideTiers = (serviceType?: RideServiceType) =>
+  mainApi.get("/ride-tiers", { params: { serviceType } });
+
+export const apiRideAddons = (serviceType?: RideServiceType) =>
+  mainApi.get("/rides/addons", { params: { serviceType } });
+
+export const apiRideQuote = (data: Record<string, unknown>) =>
+  mainApi.post("/rides/quote", data);
+
+export const apiCreateRideJob = (data: Record<string, unknown>) =>
+  mainApi.post("/rides/jobs", data);
+
+export const apiMyRideJobs = (params: {
+  status?: string;
+  serviceType?: string;
+  page?: number;
+  size?: number;
+}) => mainApi.get("/rides/jobs", { params });
+
+export const apiRideJob = (id: string) => mainApi.get(`/rides/jobs/${id}`);
+
+export const apiCancelRideJob = (id: string, reason?: string) =>
+  mainApi.post(`/rides/jobs/${id}/cancel`, { reason });
+
+export const apiPayRideJob = (id: string, data?: Record<string, unknown>) =>
+  mainApi.post(`/rides/jobs/${id}/pay`, data ?? {});
+
+export const apiRateRideJob = (id: string, stars: number, text?: string) =>
+  mainApi.post(`/rides/jobs/${id}/rate`, { stars, text });
+
+export const apiRideMessages = (jobId: string) =>
+  mainApi.get(`/rides/jobs/${jobId}/messages`);
+
+export const apiSendRideMessage = (jobId: string, text: string) =>
+  mainApi.post(`/rides/jobs/${jobId}/messages`, { text });
+
+export const apiSendRideSos = (jobId: string, data: { lat?: number; lng?: number; note?: string }) =>
+  mainApi.post(`/rides/jobs/${jobId}/sos`, data);
+
+export const apiRideSosList = (jobId: string) => mainApi.get(`/rides/jobs/${jobId}/sos`);
+
+// ---------- ที่อยู่ที่บันทึกไว้ ----------
+
+export const apiSavedAddresses = () => mainApi.get("/saved-addresses");
+export const apiCreateSavedAddress = (data: Omit<SavedAddress, "id">) =>
+  mainApi.post("/saved-addresses", data);
+export const apiUpdateSavedAddress = (id: string, data: Partial<SavedAddress>) =>
+  mainApi.patch(`/saved-addresses/${id}`, data);
+export const apiDeleteSavedAddress = (id: string) => mainApi.delete(`/saved-addresses/${id}`);
+
+// ---------- คนขับ ----------
+
+export const apiDriverApply = (data: Record<string, unknown>) => mainApi.post("/driver/apply", data);
+export const apiDriverMe = () => mainApi.get("/driver/me");
+export const apiDriverDocuments = () => mainApi.get("/driver/documents");
+export const apiDriverAddDocument = (data: { type: string; url: string }) =>
+  mainApi.post("/driver/documents", data);
+export const apiDriverVehicles = () => mainApi.get("/driver/vehicles");
+export const apiDriverAddVehicle = (data: Record<string, unknown>) =>
+  mainApi.post("/driver/vehicles", data);
+export const apiDriverUpdateVehicle = (id: string, data: Record<string, unknown>) =>
+  mainApi.patch(`/driver/vehicles/${id}`, data);
+export const apiDriverDeleteVehicle = (id: string) => mainApi.delete(`/driver/vehicles/${id}`);
+export const apiDriverSetOnline = (data: { isOnline: boolean; lat?: number; lng?: number }) =>
+  mainApi.patch("/driver/status", data);
+export const apiDriverUpdateLocation = (data: {
+  lat: number;
+  lng: number;
+  jobId?: string;
+  bearing?: number;
+  speed?: number;
+}) => mainApi.post("/driver/location", data);
+export const apiDriverAvailableJobs = (serviceType?: string) =>
+  mainApi.get("/driver/jobs/available", { params: { serviceType } });
+export const apiDriverAcceptJob = (id: string) => mainApi.post(`/driver/jobs/${id}/accept`);
+export const apiDriverArriveJob = (id: string) => mainApi.post(`/driver/jobs/${id}/arrive`);
+export const apiDriverStartJob = (id: string) => mainApi.post(`/driver/jobs/${id}/start`);
+export const apiDriverCompleteJob = (id: string, data?: Record<string, unknown>) =>
+  mainApi.post(`/driver/jobs/${id}/complete`, data ?? {});
+export const apiDriverConfirmDelivery = (id: string, data: Record<string, unknown>) =>
+  mainApi.post(`/driver/jobs/${id}/confirm-delivery`, data);
+export const apiDriverCollectPayment = (id: string, data?: Record<string, unknown>) =>
+  mainApi.post(`/driver/jobs/${id}/collect-payment`, data ?? {});
+export const apiDriverEarnings = (params?: { status?: string; size?: number }) =>
+  mainApi.get("/driver/earnings", { params });
+
+// ---------- แอดมิน (ride) ----------
+
+export const apiAdminRideDrivers = (params: { status?: string; search?: string; page?: number; size?: number }) =>
+  mainApi.get("/admin/drivers", { params });
+export const apiAdminVerifyDriver = (id: string, commissionRate?: number) =>
+  mainApi.post(`/admin/drivers/${id}/verify`, { commissionRate });
+export const apiAdminRejectDriver = (id: string, reason: string) =>
+  mainApi.post(`/admin/drivers/${id}/reject`, { reason });
+export const apiAdminSetDriverCommission = (id: string, commissionRate: number) =>
+  mainApi.post(`/admin/drivers/${id}/commission`, { commissionRate });
+export const apiAdminReviewDriverDocument = (id: string, status: string, reviewNote?: string) =>
+  mainApi.post(`/admin/documents/${id}/review`, { status, reviewNote });
+export const apiAdminRides = (params: { status?: string; serviceType?: string; page?: number; size?: number }) =>
+  mainApi.get("/admin/rides", { params });
+export const apiAdminCancelRide = (id: string, reason: string) =>
+  mainApi.post(`/admin/rides/${id}/cancel`, { reason });
+export const apiAdminSosList = (status?: string) =>
+  mainApi.get("/admin/rides/sos", { params: { status } });
+export const apiAdminAckSos = (id: string) => mainApi.post(`/admin/rides/sos/${id}/ack`);
+export const apiAdminCloseSos = (id: string) => mainApi.post(`/admin/rides/sos/${id}/close`);
+export const apiAdminRideTiers = (serviceType?: string) =>
+  mainApi.get("/admin/ride-tiers", { params: { serviceType } });
+export const apiAdminUpdateRideTier = (code: string, data: Record<string, unknown>) =>
+  mainApi.patch(`/admin/ride-tiers/${code}`, data);

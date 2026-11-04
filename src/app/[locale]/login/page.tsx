@@ -1,9 +1,9 @@
-import { RegistrationForm } from "@/components/RegistrationForm";
+import { AuthForm } from "@/components/auth/AuthForm";
 import { BRAND } from "@/data/userprofiles";
 
 export default function UserProfilesPage() {
   return (
-    <main className="mx-auto w-full max-w-xl px-margin py-4 md:py-8">
+    <main className="mx-auto w-full max-w-md px-margin py-4 md:py-8">
       {/* Brand */}
       <div className="flex flex-col items-center pb-space-lg pt-space-md text-center">
         <div className="relative mb-space-sm flex items-center justify-center">
@@ -22,15 +22,15 @@ export default function UserProfilesPage() {
           <span className="h-1.5 w-1.5 rounded-full bg-secondary-container" />
           {BRAND.passLabel}
         </div>
-        <h2 className="font-headline-lg text-headline-lg tracking-tight text-on-surface">
-          {BRAND.title}
-        </h2>
+        <h1 className="font-headline-lg text-headline-lg tracking-tight text-on-surface">
+          WanderGo
+        </h1>
         <p className="mt-1 max-w-[280px] font-body-md text-body-md text-on-surface-variant">
-          {BRAND.subtitle}
+          บัญชีเดียวใช้ได้ทุกบริการ — เรียกโดยสาร ส่งพัสดุ และเป็นคนขับ
         </p>
       </div>
 
-      <RegistrationForm />
+      <AuthForm />
     </main>
   );
 }

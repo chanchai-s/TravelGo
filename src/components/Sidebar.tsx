@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "@/data/homepage";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useAuthStore } from "@/app/stores/auth.stores";
 
 function NavIcon({ icon, className }: { icon: string; className?: string }) {
   return (
@@ -15,6 +17,20 @@ function NavIcon({ icon, className }: { icon: string; className?: string }) {
 
 export function Sidebar() {
   const pathname = usePathname();
+  const token = useAuthStore((state) => state.token);
+  const ready = useAuthStore((state) => state.ready);
+
+  useEffect(() => {
+    if (!ready) {
+      void useAuthStore.getState().init();
+    }
+  }, [ready]);
+
+  // ซ่อนปุ่ม Login เมื่อเข้าสู่ระบบแล้ว — โปรไฟล์อยู่ในเมนู Profile
+  const items = token === null ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.id !== "login");
+  const activeItem = items
+    .filter((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))
+    .sort((a, b) => b.href.length - a.href.length)[0];
 
   return (
     <>
@@ -27,8 +43,8 @@ export function Sidebar() {
             </span>
           </Link>
           <nav className="flex items-center gap-1">
-            {NAV_ITEMS.map((item) => {
-              const active = item.href !== "#" && pathname === item.href;
+            {items.map((item) => {
+              const active = item.href !== "#" && activeItem?.id === item.id;
               return (
                 <Link
                   key={item.id}
@@ -63,8 +79,8 @@ export function Sidebar() {
       {/* Mobile bottom nav (from design) */}
       <nav className="fixed inset-x-0 bottom-0 z-50 bg-surface-container-lowest/90 pb-safe shadow-[0_-2px_12px_rgba(15,23,42,0.06)] backdrop-blur-xl md:hidden">
         <div className="mx-auto flex h-16 max-w-md items-center justify-around px-space-xs">
-          {NAV_ITEMS.map((item) => {
-            const active = item.href !== "#" && pathname === item.href;
+          {items.map((item) => {
+            const active = item.href !== "#" && activeItem?.id === item.id;
             return (
               <Link
                 key={item.id}

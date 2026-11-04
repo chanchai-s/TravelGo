@@ -174,8 +174,8 @@ export const STAYS: Stay[] = [
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "home", label: "Home", icon: "home", href: "/homepage" },
-  { id: "my-trips", label: "My Trips", icon: "confirmation_number", href: "#", dot: true },
-  { id: "saved", label: "Saved", icon: "favorite", href: "#" },
-  { id: "cart", label: "Cart", icon: "shopping_bag", href: "#", badge: "2" },
+  { id: "ride", label: "Ride", icon: "local_taxi", href: "/ride" },
+  { id: "my-trips", label: "My Trips", icon: "confirmation_number", href: "/ride/history" },
+  { id: "profile", label: "Profile", icon: "person", href: "/profile" },
   { id: "login", label: "Login", icon: "login", href: "/login" },
 ];

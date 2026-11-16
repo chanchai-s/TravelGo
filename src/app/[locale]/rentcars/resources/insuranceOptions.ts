@@ -1,5 +1,5 @@
-import { RENTAL_RULES } from "./data.js";
-import { InsuranceOption } from "../types/vehicle.js";
+import { RENTAL_RULES } from "./data";
+import type { InsuranceOption } from "../types/vehicle";
 
 const EXCLUSIONS = [
   "Interior stains / damage",

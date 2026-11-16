@@ -4,6 +4,20 @@ export enum UserRole {
   OWNER = "OWNER",
 }
 
+export enum FleetOwnerStatus {
+  PENDING = "PENDING",
+  VERIFIED = "VERIFIED",
+  REJECTED = "REJECTED",
+  SUSPENDED = "SUSPENDED",
+}
+
+export enum DriverStatus {
+  PENDING = "PENDING",
+  VERIFIED = "VERIFIED",
+  REJECTED = "REJECTED",
+  SUSPENDED = "SUSPENDED",
+}
+
 export enum UserStatus {
   ACTIVE = "ACTIVE",
   PENDING_VERIFICATION = "PENDING_VERIFICATION",

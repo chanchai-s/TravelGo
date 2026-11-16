@@ -1,5 +1,5 @@
-import { VEHICLES } from "../resources/data.js";
-import { Vehicle } from "../types/vehicle.js";
+import { VEHICLES } from "../resources/data";
+import type { Vehicle } from "../types/vehicle";
 
 export interface FilterVehiclesArgs {
   category?: string;

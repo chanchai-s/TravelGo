@@ -24,12 +24,16 @@ function inputDate(offsetDays: number): string {
 
 // ใช้เวลา 10:00 ตามเวลาท้องถิ่น แล้วแปลงเป็น ISO ให้ backend
 function toIso(date: string, hour = 10): string {
-  return new Date(`${date}T${String(hour).padStart(2, "0")}:00:00`).toISOString();
+  return new Date(
+    `${date}T${String(hour).padStart(2, "0")}:00:00`,
+  ).toISOString();
 }
 
 function dayCount(from: string, to: string): number {
   if (!from || !to) return 0;
-  const ms = new Date(`${to}T10:00:00`).getTime() - new Date(`${from}T10:00:00`).getTime();
+  const ms =
+    new Date(`${to}T10:00:00`).getTime() -
+    new Date(`${from}T10:00:00`).getTime();
   return Math.max(0, Math.ceil(ms / DAY_MS));
 }
 
@@ -37,7 +41,11 @@ function formatDate(value: string): string {
   if (!value) return "-";
   const d = new Date(`${value}T10:00:00`);
   if (Number.isNaN(d.getTime())) return value;
-  return d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" });
+  return d.toLocaleDateString("th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function errorMessage(error: unknown, fallback: string): string {
@@ -152,7 +160,10 @@ export default function RentCarsPage() {
   );
 
   const categoryFilters = useMemo(
-    () => [{ id: "ALL", name: "All Cars" }, ...categories.map((c) => ({ id: c.slug, name: c.name }))],
+    () => [
+      { id: "ALL", name: "All Cars" },
+      ...categories.map((c) => ({ id: c.slug, name: c.name })),
+    ],
     [categories],
   );
 
@@ -297,8 +308,12 @@ export default function RentCarsPage() {
               </span>
             </span>
             <div className="flex items-center gap-1.5 rounded-full bg-secondary-fixed px-2.5 py-1 text-on-secondary-fixed">
-              <span className="material-symbols-outlined text-[14px]">schedule</span>
-              <span className="font-label-sm text-label-sm">{days || 0} days</span>
+              <span className="material-symbols-outlined text-[14px]">
+                schedule
+              </span>
+              <span className="font-label-sm text-label-sm">
+                {days || 0} days
+              </span>
             </div>
           </div>
 
@@ -402,10 +417,16 @@ export default function RentCarsPage() {
             <div className="relative h-40 w-full overflow-hidden rounded-xl bg-surface-container-low">
               {v.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={v.imageUrl} alt={v.name} className="h-full w-full object-cover" />
+                <img
+                  src={v.imageUrl}
+                  alt={v.name}
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-outline">
-                  <span className="material-symbols-outlined text-[48px]">directions_car</span>
+                  <span className="material-symbols-outlined text-[48px]">
+                    directions_car
+                  </span>
                 </div>
               )}
               <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-surface-container-lowest/90 px-2.5 py-1 shadow-sm backdrop-blur-md">
@@ -475,7 +496,9 @@ export default function RentCarsPage() {
         ))}
 
         {!loading && vehicles.length === 0 && !error && (
-          <p className="py-10 text-center text-tertiary">ไม่พบรถในช่วงวันที่เลือก</p>
+          <p className="py-10 text-center text-tertiary">
+            ไม่พบรถในช่วงวันที่เลือก
+          </p>
         )}
 
         {/* Trust card */}
@@ -576,9 +599,14 @@ export default function RentCarsPage() {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-tertiary">เงินประกัน (คืนเมื่อคืนรถ)</span>
+                    <span className="text-tertiary">
+                      เงินประกัน (คืนเมื่อคืนรถ)
+                    </span>
                     <span className="font-semibold">
-                      ฿{CURRENCY.format(quote?.depositAmount ?? current.depositAmount)}
+                      ฿
+                      {CURRENCY.format(
+                        quote?.depositAmount ?? current.depositAmount,
+                      )}
                     </span>
                   </div>
                   <div className="mt-2 flex justify-between border-t border-outline-variant pt-2">

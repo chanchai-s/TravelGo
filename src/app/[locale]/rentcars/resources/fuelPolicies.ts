@@ -34,31 +34,25 @@ export const rentalGuidelinesPrompt = (topic: string) => {
 - ไม่จำกัดระยะทาง (Unlimited)
 - จำกัดระยะทางต่อวัน
 - คิดค่าบริการเพิ่มหากเกินระยะทาง
-  },
-    {
-      name: "EV charging",
-      description: "รถไฟฟ้าชาร์จเร็ว",
-    },
-    {
-      type: "AUTO",
-      label: "อัตโนมัติ",
-    },
-    {
-      type: "MANUAL",
-      label: "เกียร์ธรรมดา",
-    },
-  ],
-  color: "#1E293B",
+`,
+  };
+
+  return topics[topic] ?? "";
 };
+
 export const fuelTypes = ["PETROL", "DIESEL", "HYBRID", "EV"] as const;
 export type FuelType = (typeof fuelTypes)[number];
+
 export interface FuelPolicy {
   type: "FULL_TO_FULL" | "PREPAID" | "SAME_TO_SAME";
   name: string;
   description: string;
-  pricePerDay: number;
-  includesUnlimited: boolean;
+  fee: number;
+  pros: string[];
+  cons: string[];
+  recommendedFor: string;
 }
+
 export const FUEL_POLICIES: FuelPolicy[] = [
   {
     type: "FULL_TO_FULL",

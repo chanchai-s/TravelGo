@@ -1,4 +1,4 @@
-import { BookingStatus, RentalBooking } from "../types/booking.js";
+import { BookingStatus, type RentalBooking } from "../types/booking";
 
 const SAMPLE: RentalBooking[] = [
   {

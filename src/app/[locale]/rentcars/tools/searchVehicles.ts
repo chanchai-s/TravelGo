@@ -1,5 +1,5 @@
-import { VEHICLES } from "../resources/data.js";
-import { VehicleSearchParams, VehicleSearchResult } from "../types/vehicle.js";
+import { VEHICLES } from "../resources/data";
+import type { VehicleSearchParams, VehicleSearchResult } from "../types/vehicle";
 
 /** เน€เธยเน€เธยเน€เธยเน€เธเธเน€เธเธ’เน€เธเธเน€เธโ€“เน€เธโ€ขเน€เธเธ’เน€เธเธเน€เธโ€ขเน€เธเธ‘เน€เธเธเน€เธยเน€เธเธเน€เธเธเน€เธย (เน€เธเธเน€เธเธเน€เธเธเน€เธโ€/เน€เธเธเน€เธเธ’เน€เธยเน€เธเธ’/เน€เธโ€”เน€เธเธ•เน€เธยเน€เธยเน€เธเธ‘เน€เธยเน€เธย/เน€เธยเน€เธเธ•เน€เธโฌเน€เธยเน€เธเธเน€เธเธเน€เธย/เน€เธโฌเน€เธยเน€เธเธ—เน€เธยเน€เธเธเน€เธโฌเน€เธยเน€เธเธ…เน€เธเธ”เน€เธย/เน€เธโฌเน€เธยเน€เธเธ•เน€เธเธเน€เธเธเน€เธย) */
 export async function searchVehicles(args: VehicleSearchParams) {

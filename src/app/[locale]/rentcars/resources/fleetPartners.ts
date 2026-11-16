@@ -1,4 +1,4 @@
-import { FLEET_PARTNERS } from "./data.js";
+import { FLEET_PARTNERS } from "./data";
 
 export async function getFleetPartners() {
   return {

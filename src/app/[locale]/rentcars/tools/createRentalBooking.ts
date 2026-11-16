@@ -1,5 +1,5 @@
-import { VEHICLES, RENTAL_RULES } from "../resources/data.js";
-import { RentalBooking, BookingStatus } from "../types/booking.js";
+import { VEHICLES, RENTAL_RULES } from "../resources/data";
+import { RentalBooking, BookingStatus } from "../types/booking";
 
 const ADDON_RATES: Record<string, number> = {
   CHILD_SEAT: 150,

@@ -1,5 +1,5 @@
-import { VEHICLES, RENTAL_RULES } from "./data.js";
-import { VehicleDetail } from "../types/vehicle.js";
+import { VEHICLES, RENTAL_RULES } from "./data";
+import type { VehicleDetail } from "../types/vehicle";
 
 export async function getVehicleDetail(vehicleId: string): Promise<VehicleDetail | { error: string }> {
   const vehicle = VEHICLES.find((v) => v.id === vehicleId);

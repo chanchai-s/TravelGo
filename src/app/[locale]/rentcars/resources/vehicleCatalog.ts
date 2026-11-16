@@ -1,4 +1,4 @@
-import { VEHICLES } from "./data.js";
+import { VEHICLES } from "./data";
 
 export async function getVehicleCatalog() {
   const categories = [

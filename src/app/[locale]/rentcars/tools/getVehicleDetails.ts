@@ -1,4 +1,4 @@
-import { getVehicleDetail } from "../resources/vehicleDetails.js";
+import { getVehicleDetail } from "../resources/vehicleDetails";
 
 /** เธ”เธนเธฃเธฒเธขเธฅเธฐเน€เธญเธตเธขเธ”เธฃเธ–เธเธฑเธเน€เธ”เธตเธขเธง (เธชเน€เธเธ + เธเธเธเธฒเธฃเน€เธเนเธฒ + เธฃเธตเธงเธดเธง + เธฃเธ–เนเธเธฅเนเน€เธเธตเธขเธ) */
 export async function getVehicleDetails(args: { vehicleId: string }) {

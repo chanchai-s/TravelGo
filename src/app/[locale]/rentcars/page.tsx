@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   apiCreateRentalBooking,
   apiListVehicleCategories,
   apiQuoteVehicle,
   apiSearchVehicles,
 } from "@/app/Api/mainApi";
+import { useAuthStore } from "@/app/stores/auth.stores";
 import type {
   RentalBookingResult,
   RentalQuote,
   VehicleCategoryItem,
   VehicleListItem,
-} from "@/app/[locale]/rentcars/resources/data";
+} from "@/app/[locale]/rentcars/types/api";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -61,7 +64,12 @@ function errorMessage(error: unknown, fallback: string): string {
 const CURRENCY = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
 
 export default function RentCarsPage() {
-  const [mode, setMode] = useState<"rental" | "ride">("rental");
+  const router = useRouter();
+  const pathname = usePathname();
+  // proxy เติม locale ให้ path ที่ไม่มี prefix แต่ query string จะหาย
+  // จึงต้องใส่ locale เองตอนพาไปหน้า login เพื่อเก็บ ?next= ไว้
+  const locale = pathname.split("/")[1] || "th";
+  const token = useAuthStore((state) => state.token);
   const [categories, setCategories] = useState<VehicleCategoryItem[]>([]);
   const [vehicles, setVehicles] = useState<VehicleListItem[]>([]);
   const [category, setCategory] = useState("ALL");
@@ -174,8 +182,23 @@ export default function RentCarsPage() {
     setBookingError(null);
   };
 
+  // ต้องเข้าสู่ระบบก่อนจอง — พาไปหน้า login แล้วกลับมาที่นี่
+  const goLogin = () => router.push(`/${locale}/login?next=/rentcars`);
+
+  const openBooking = (vehicleId: string) => {
+    if (token === null) {
+      goLogin();
+      return;
+    }
+    setSelected(vehicleId);
+  };
+
   const confirmBooking = async () => {
     if (!selected) return;
+    if (token === null) {
+      goLogin();
+      return;
+    }
     setSubmitting(true);
     setBookingError(null);
     try {
@@ -193,46 +216,11 @@ export default function RentCarsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-surface font-body-md text-body-md text-on-surface">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div className="mx-auto flex h-16 max-w-md items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-container">
-              <span className="material-symbols-outlined text-[20px] text-on-primary-container">
-                explore
-              </span>
-            </div>
-            <span className="font-headline-sm text-headline-sm font-bold tracking-tight">
-              RentCars
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <button className="flex h-11 w-11 items-center justify-center text-on-surface-variant">
-              <span className="material-symbols-outlined text-[24px]">
-                notifications
-              </span>
-            </button>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-              <span className="material-symbols-outlined text-[18px] text-on-primary">
-                person
-              </span>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="mx-auto flex w-full max-w-md flex-col px-4 pb-8">
-        {/* Segmented control */}
-        <div className="mt-4 mb-4 flex w-full items-center justify-between rounded-xl bg-surface-container p-1 shadow-sm">
-          <button
-            onClick={() => setMode("rental")}
-            className={`flex flex-1 items-center justify-center gap-1 rounded-lg py-2.5 font-headline-sm text-headline-sm transition-all ${
-              mode === "rental"
-                ? "bg-surface-container-lowest text-primary shadow-sm"
-                : "text-tertiary"
-            }`}
-          >
+    <div className="min-h-screen bg-surface font-body-md text-body-md text-on-surface">
+      <div className="mx-auto flex w-full max-w-md flex-col px-4 pb-8 md:max-w-6xl md:px-6">
+        {/* สลับบริการ: รถเช่า (หน้าปัจจุบัน) / เรียกโดยสาร */}
+        <div className="mt-4 mb-4 flex w-full items-center justify-between rounded-xl bg-surface-container p-1 shadow-sm md:max-w-md">
+          <span className="flex flex-1 cursor-default items-center justify-center gap-1 rounded-lg bg-surface-container-lowest py-2.5 font-headline-sm text-headline-sm text-primary shadow-sm">
             <span
               className="material-symbols-outlined text-[20px]"
               style={{ fontVariationSettings: "'FILL' 1" }}
@@ -240,24 +228,21 @@ export default function RentCarsPage() {
               directions_car
             </span>
             Car Rental
-          </button>
-          <button
-            onClick={() => setMode("ride")}
-            className={`flex flex-1 items-center justify-center gap-1 rounded-lg py-2.5 font-headline-sm text-headline-sm transition-all ${
-              mode === "ride"
-                ? "bg-surface-container-lowest text-primary shadow-sm"
-                : "text-tertiary"
-            }`}
+          </span>
+          <Link
+            href={`/${locale}/ride`}
+            className="flex flex-1 items-center justify-center gap-1 rounded-lg py-2.5 font-headline-sm text-headline-sm text-tertiary transition-colors hover:text-on-surface"
           >
             <span className="material-symbols-outlined text-[20px]">
               local_taxi
             </span>
             Ride-Hailing
-          </button>
+          </Link>
         </div>
 
         {/* Search card */}
         <div className="mb-4 flex w-full flex-col gap-2 rounded-xl bg-surface-container-lowest p-4 shadow-md">
+          <div className="grid gap-2 md:grid-cols-2">
           <div className="flex items-center gap-2 rounded-lg bg-surface-container p-2">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-primary">
               <span className="material-symbols-outlined text-[18px]">
@@ -297,6 +282,7 @@ export default function RentCarsPage() {
               />
             </div>
           </div>
+          </div>
 
           <div className="flex items-center justify-between px-1 pt-1">
             <span className="flex items-center gap-1">
@@ -325,33 +311,31 @@ export default function RentCarsPage() {
         </div>
 
         {/* Quick switch banner */}
-        {mode === "rental" && (
-          <button
-            onClick={() => setMode("ride")}
-            className="mb-4 flex w-full items-center justify-between rounded-xl bg-gradient-to-r from-primary to-primary-container p-4 text-on-primary shadow-md transition-transform active:scale-[0.99]"
-          >
-            <div className="flex min-w-0 items-center gap-2">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-on-primary/15">
-                <span className="material-symbols-outlined text-[24px]">
-                  hail
-                </span>
-              </div>
-              <div className="flex min-w-0 flex-col text-left">
-                <span className="truncate font-headline-sm text-headline-sm">
-                  Need a quick ride right now?
-                </span>
-                <span className="truncate font-body-sm text-body-sm text-on-primary/80">
-                  Instant city pickups with vetted drivers
-                </span>
-              </div>
-            </div>
-            <div className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-on-primary/20">
-              <span className="material-symbols-outlined text-[18px] text-on-primary">
-                arrow_forward
+        <Link
+          href={`/${locale}/ride`}
+          className="mb-4 flex w-full items-center justify-between rounded-xl bg-gradient-to-r from-primary to-primary-container p-4 text-on-primary shadow-md transition-transform active:scale-[0.99]"
+        >
+          <div className="flex min-w-0 items-center gap-2">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-on-primary/15">
+              <span className="material-symbols-outlined text-[24px]">
+                hail
               </span>
             </div>
-          </button>
-        )}
+            <div className="flex min-w-0 flex-col text-left">
+              <span className="truncate font-headline-sm text-headline-sm">
+                Need a ride instead?
+              </span>
+              <span className="truncate font-body-sm text-body-sm text-on-primary/80">
+                Switch to Ride-Hailing to book a driver
+              </span>
+            </div>
+          </div>
+          <div className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-on-primary/20">
+            <span className="material-symbols-outlined text-[18px] text-on-primary">
+              arrow_forward
+            </span>
+          </div>
+        </Link>
 
         {/* Filter pills */}
         <div className="mb-1 flex w-full items-center gap-1 overflow-x-auto pb-2">
@@ -373,11 +357,11 @@ export default function RentCarsPage() {
         {/* Section header */}
         <div className="flex items-center justify-between pb-1 pt-2">
           <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
-            {loading ? "Loading..." : `${vehicles.length} Vehicles Available`}
+            {loading ? "กำลังโหลด..." : `${vehicles.length} คันพร้อมให้เช่า`}
           </span>
-          <span className="flex items-center gap-0.5 font-label-md text-label-md text-primary">
-            <span className="material-symbols-outlined text-[16px]">tune</span>{" "}
-            Live
+          <span className="flex items-center gap-0.5 font-label-md text-label-md text-tertiary">
+            <span className="material-symbols-outlined text-[16px]">schedule</span>{" "}
+            {days > 0 ? `${days} วัน` : "เลือกวันที่"}
           </span>
         </div>
 
@@ -388,10 +372,11 @@ export default function RentCarsPage() {
         )}
 
         {/* Vehicle cards */}
+        <div className="grid w-full gap-4 md:grid-cols-2 lg:grid-cols-3">
         {vehicles.map((v) => (
           <div
             key={v.id}
-            className="relative mb-4 flex w-full flex-col gap-2 rounded-xl bg-surface-container-lowest p-4 shadow-md"
+            className="relative flex w-full flex-col gap-2 rounded-xl bg-surface-container-lowest p-4 shadow-md"
           >
             <div className="flex items-start justify-between">
               <div className="flex min-w-0 flex-col">
@@ -399,16 +384,13 @@ export default function RentCarsPage() {
                   <span className="rounded-full bg-primary-fixed px-2 py-0.5 font-label-sm text-label-sm font-bold uppercase tracking-wider text-on-primary-fixed">
                     {v.category?.name ?? "Car"}
                   </span>
-                  <span className="font-body-sm text-body-sm text-tertiary">
-                    or similar
-                  </span>
                 </div>
                 <h3 className="truncate font-headline-md text-headline-md text-on-surface">
                   {v.name}
                 </h3>
               </div>
               {v.partner && (
-                <div className="ml-2 max-w-[45%] truncate rounded-md bg-secondary-container px-2.5 py-1 font-headline-sm text-headline-sm font-black tracking-tight text-on-secondary shadow-sm">
+                <div className="ml-2 max-w-[50%] truncate rounded-md bg-secondary-container px-2.5 py-1 font-label-sm text-label-sm font-bold tracking-tight text-on-secondary shadow-sm">
                   {v.partner.companyName}
                 </div>
               )}
@@ -477,14 +459,18 @@ export default function RentCarsPage() {
                   </span>
                 </div>
                 <span className="font-body-sm text-body-sm text-tertiary">
-                  Total ฿{CURRENCY.format(v.pricePerDay * Math.max(1, days))} (
-                  {Math.max(1, days)} days)
+                  รวม ฿{CURRENCY.format(v.pricePerDay * Math.max(1, days))} (
+                  {Math.max(1, days)} วัน)
+                </span>
+                <span className="font-body-sm text-body-sm text-tertiary">
+                  มัดจำ ฿{CURRENCY.format(v.depositAmount)} · ขั้นต่ำ{" "}
+                  {v.minRentalDays} วัน
                 </span>
               </div>
               <button
-                onClick={() => setSelected(v.id)}
+                onClick={() => openBooking(v.id)}
                 disabled={days < 1}
-                className="flex h-12 items-center justify-center gap-1 rounded-xl bg-secondary-container px-6 font-label-lg text-label-lg font-bold text-on-secondary shadow-md transition-all hover:opacity-95 active:scale-95 disabled:opacity-50"
+                className="flex h-12 shrink-0 items-center justify-center gap-1 rounded-xl bg-secondary-container px-6 font-label-lg text-label-lg font-bold text-on-secondary shadow-md transition-all hover:opacity-95 active:scale-95 disabled:opacity-50"
               >
                 Rent Now
                 <span className="material-symbols-outlined text-[18px]">
@@ -496,13 +482,14 @@ export default function RentCarsPage() {
         ))}
 
         {!loading && vehicles.length === 0 && !error && (
-          <p className="py-10 text-center text-tertiary">
+          <p className="py-10 text-center text-tertiary md:col-span-2 lg:col-span-3">
             ไม่พบรถในช่วงวันที่เลือก
           </p>
         )}
+        </div>
 
         {/* Trust card */}
-        <div className="flex w-full items-center gap-4 rounded-xl bg-surface-container p-4 shadow-sm">
+        <div className="mt-4 flex w-full items-center gap-4 rounded-xl bg-surface-container p-4 shadow-sm">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-fixed text-primary">
             <span className="material-symbols-outlined text-[26px]">
               verified_user
@@ -510,10 +497,10 @@ export default function RentCarsPage() {
           </div>
           <div className="flex min-w-0 flex-col">
             <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
-              100% Price Match Guarantee
+              Prices include 7% VAT
             </span>
             <span className="font-body-sm text-body-sm text-tertiary">
-              Zero hidden airport depot fees &amp; 24/7 roadside rescue.
+              Pay the deposit and rental fee at the branch when you pick up.
             </span>
           </div>
         </div>
@@ -522,11 +509,11 @@ export default function RentCarsPage() {
       {/* Booking sheet */}
       {current && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm md:items-center"
           onClick={closeSheet}
         >
           <div
-            className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-surface-container-lowest p-5 shadow-2xl"
+            className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-surface-container-lowest p-5 shadow-2xl md:rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-3 flex items-start justify-between">
@@ -569,11 +556,17 @@ export default function RentCarsPage() {
                     ? "อนุมัติอัตโนมัติแล้ว — ชำระเงินที่สาขาเมื่อรับรถ"
                     : "รอพาร์ทเนอร์อนุมัติ — จะแจ้งผลให้ทราบ"}
                 </p>
+                <Link
+                  href={`/${locale}/mytrips`}
+                  className="mt-4 flex w-full items-center justify-center rounded-xl bg-primary py-3 font-label-lg text-label-lg font-bold text-on-primary shadow-md active:scale-[0.98]"
+                >
+                  ดูการจองของฉัน
+                </Link>
                 <button
                   onClick={closeSheet}
-                  className="mt-4 w-full rounded-xl bg-primary py-3 font-label-lg text-label-lg font-bold text-on-primary shadow-md active:scale-[0.98]"
+                  className="mt-2 w-full rounded-xl border border-outline-variant py-3 font-label-lg text-label-lg font-semibold text-on-surface active:scale-[0.98]"
                 >
-                  เสร็จสิ้น
+                  ปิด
                 </button>
               </div>
             ) : (
@@ -640,57 +633,6 @@ export default function RentCarsPage() {
           </div>
         </div>
       )}
-
-      {/* Bottom nav */}
-      <nav className="fixed bottom-0 inset-x-0 z-50 bg-surface-container-lowest/90 pb-safe shadow-[0_-2px_12px_rgba(15,23,42,0.06)] backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-md items-center justify-around px-1">
-          <a
-            href="/th/homepage"
-            className="flex h-full flex-1 flex-col items-center justify-center gap-0.5 text-primary-container"
-          >
-            <span className="material-symbols-outlined text-[24px]">home</span>
-            <span className="font-label-sm text-label-sm font-semibold">
-              Home
-            </span>
-          </a>
-          <a
-            href="/th/mytrips"
-            className="flex h-full flex-1 flex-col items-center justify-center gap-0.5 text-tertiary"
-          >
-            <span className="material-symbols-outlined text-[24px]">
-              confirmation_number
-            </span>
-            <span className="font-label-sm text-label-sm">My Trips</span>
-          </a>
-          <a
-            href="/th/bookingdetails"
-            className="flex h-full flex-1 flex-col items-center justify-center gap-0.5 text-tertiary"
-          >
-            <span className="material-symbols-outlined text-[24px]">
-              favorite
-            </span>
-            <span className="font-label-sm text-label-sm">Saved</span>
-          </a>
-          <a
-            href="/th/transport"
-            className="flex h-full flex-1 flex-col items-center justify-center gap-0.5 text-tertiary"
-          >
-            <span className="material-symbols-outlined text-[24px]">
-              shopping_bag
-            </span>
-            <span className="font-label-sm text-label-sm">Cart</span>
-          </a>
-          <a
-            href="/th/login"
-            className="flex h-full flex-1 flex-col items-center justify-center gap-0.5 text-tertiary"
-          >
-            <span className="material-symbols-outlined text-[24px]">
-              account_circle
-            </span>
-            <span className="font-label-sm text-label-sm">Profile</span>
-          </a>
-        </div>
-      </nav>
-    </main>
+    </div>
   );
 }

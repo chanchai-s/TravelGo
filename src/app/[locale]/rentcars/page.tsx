@@ -5,9 +5,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   apiCreateRentalBooking,
+  apiListVehicleBranches,
   apiListVehicleCategories,
   apiQuoteVehicle,
   apiSearchVehicles,
+  type VehicleBranchItem,
 } from "@/app/Api/mainApi";
 import { useAuthStore } from "@/app/stores/auth.stores";
 import type {
@@ -25,19 +27,17 @@ function inputDate(offsetDays: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-// ใช้เวลา 10:00 ตามเวลาท้องถิ่น แล้วแปลงเป็น ISO ให้ backend
-function toIso(date: string, hour = 10): string {
-  return new Date(
-    `${date}T${String(hour).padStart(2, "0")}:00:00`,
-  ).toISOString();
+// แปลง วันที่ + เวลา (เวลาท้องถิ่น) เป็น ISO ให้ backend
+function toIso(date: string, time = "10:00"): string {
+  return new Date(`${date}T${time}:00`).toISOString();
 }
 
-function dayCount(from: string, to: string): number {
-  if (!from || !to) return 0;
-  const ms =
-    new Date(`${to}T10:00:00`).getTime() -
-    new Date(`${from}T10:00:00`).getTime();
-  return Math.max(0, Math.ceil(ms / DAY_MS));
+/** จำนวนวันเช่า — ปัดขึ้นเป็นวันเหมือนฝั่ง backend (ขั้นต่ำ 1 วัน) */
+function dayCount(pickupAt: string, dropoffAt: string): number {
+  if (!pickupAt || !dropoffAt) return 0;
+  const ms = new Date(dropoffAt).getTime() - new Date(pickupAt).getTime();
+  if (Number.isNaN(ms) || ms <= 0) return 0;
+  return Math.max(1, Math.ceil(ms / DAY_MS));
 }
 
 function formatDate(value: string): string {
@@ -71,10 +71,14 @@ export default function RentCarsPage() {
   const locale = pathname.split("/")[1] || "th";
   const token = useAuthStore((state) => state.token);
   const [categories, setCategories] = useState<VehicleCategoryItem[]>([]);
+  const [branches, setBranches] = useState<VehicleBranchItem[]>([]);
   const [vehicles, setVehicles] = useState<VehicleListItem[]>([]);
   const [category, setCategory] = useState("ALL");
+  const [branchId, setBranchId] = useState("ALL");
   const [pickupDate, setPickupDate] = useState("");
+  const [pickupTime, setPickupTime] = useState("10:00");
   const [returnDate, setReturnDate] = useState("");
+  const [returnTime, setReturnTime] = useState("10:00");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,7 +89,9 @@ export default function RentCarsPage() {
   const [bookingError, setBookingError] = useState<string | null>(null);
   const [booked, setBooked] = useState<RentalBookingResult | null>(null);
 
-  const days = dayCount(pickupDate, returnDate);
+  const pickupAtIso = pickupDate === "" ? "" : toIso(pickupDate, pickupTime);
+  const dropoffAtIso = returnDate === "" ? "" : toIso(returnDate, returnTime);
+  const days = dayCount(pickupAtIso, dropoffAtIso);
 
   // ค่าเริ่มต้น: รับรถพรุ่งนี้ คืนอีก 3 วัน
   useEffect(() => {
@@ -97,13 +103,16 @@ export default function RentCarsPage() {
     apiListVehicleCategories()
       .then((res) => setCategories(res.data?.data ?? []))
       .catch(() => setCategories([]));
+    apiListVehicleBranches()
+      .then((res) => setBranches((res.data?.data ?? []) as VehicleBranchItem[]))
+      .catch(() => setBranches([]));
   }, []);
 
   useEffect(() => {
-    if (!pickupDate || !returnDate) return;
+    if (pickupAtIso === "" || dropoffAtIso === "") return;
     if (days < 1) {
       setVehicles([]);
-      setError("วันคืนรถต้องอยู่หลังวันรับรถ");
+      setError("เวลาคืนรถต้องอยู่หลังเวลารับรถ");
       setLoading(false);
       return;
     }
@@ -114,8 +123,9 @@ export default function RentCarsPage() {
 
     apiSearchVehicles({
       category: category === "ALL" ? undefined : category,
-      pickupAt: toIso(pickupDate),
-      dropoffAt: toIso(returnDate),
+      branchId: branchId === "ALL" ? undefined : branchId,
+      pickupAt: pickupAtIso,
+      dropoffAt: dropoffAtIso,
       size: 50,
     })
       .then((res) => {
@@ -131,9 +141,9 @@ export default function RentCarsPage() {
     return () => {
       active = false;
     };
-  }, [category, pickupDate, returnDate, days]);
+  }, [category, branchId, pickupAtIso, dropoffAtIso, days]);
 
-  // ขอใบเสนอราคาเมื่อเลือกรถ (หรือเปลี่ยนวันที่)
+  // ขอใบเสนอราคาเมื่อเลือกรถ (หรือเปลี่ยนวันเวลา)
   useEffect(() => {
     if (!selected || days < 1) {
       setQuote(null);
@@ -146,7 +156,7 @@ export default function RentCarsPage() {
     setBookingError(null);
     setBooked(null);
 
-    apiQuoteVehicle(selected, toIso(pickupDate), toIso(returnDate))
+    apiQuoteVehicle(selected, pickupAtIso, dropoffAtIso)
       .then((res) => {
         if (active) setQuote(res.data?.data ?? null);
       })
@@ -160,7 +170,7 @@ export default function RentCarsPage() {
     return () => {
       active = false;
     };
-  }, [selected, pickupDate, returnDate, days]);
+  }, [selected, pickupAtIso, dropoffAtIso, days]);
 
   const current = useMemo(
     () => vehicles.find((v) => v.id === selected) ?? null,
@@ -204,8 +214,8 @@ export default function RentCarsPage() {
     try {
       const res = await apiCreateRentalBooking({
         vehicleId: selected,
-        pickupAt: toIso(pickupDate),
-        dropoffAt: toIso(returnDate),
+        pickupAt: pickupAtIso,
+        dropoffAt: dropoffAtIso,
       });
       setBooked((res.data?.data ?? null) as RentalBookingResult | null);
     } catch (err) {
@@ -251,15 +261,24 @@ export default function RentCarsPage() {
             </div>
             <div className="flex min-w-0 flex-1 flex-col">
               <span className="font-label-sm text-label-sm uppercase tracking-wider text-tertiary">
-                Pick-up date
+                Pick-up date &amp; time
               </span>
-              <input
-                type="date"
-                value={pickupDate}
-                min={inputDate(0)}
-                onChange={(e) => setPickupDate(e.target.value)}
-                className="w-full bg-transparent font-headline-sm text-headline-sm text-on-surface outline-none"
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={pickupDate}
+                  min={inputDate(0)}
+                  onChange={(e) => setPickupDate(e.target.value)}
+                  className="min-w-0 flex-1 bg-transparent font-headline-sm text-headline-sm text-on-surface outline-none"
+                />
+                <input
+                  type="time"
+                  value={pickupTime}
+                  onChange={(e) => setPickupTime(e.target.value)}
+                  aria-label="เวลาเข้ารับรถ"
+                  className="w-[86px] shrink-0 bg-transparent font-headline-sm text-headline-sm text-on-surface outline-none"
+                />
+              </div>
             </div>
           </div>
 
@@ -271,17 +290,58 @@ export default function RentCarsPage() {
             </div>
             <div className="flex min-w-0 flex-1 flex-col">
               <span className="font-label-sm text-label-sm uppercase tracking-wider text-tertiary">
-                Drop-off date
+                Drop-off date &amp; time
               </span>
-              <input
-                type="date"
-                value={returnDate}
-                min={pickupDate || inputDate(0)}
-                onChange={(e) => setReturnDate(e.target.value)}
-                className="w-full bg-transparent font-headline-sm text-headline-sm text-on-surface outline-none"
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={returnDate}
+                  min={pickupDate || inputDate(0)}
+                  onChange={(e) => setReturnDate(e.target.value)}
+                  className="min-w-0 flex-1 bg-transparent font-headline-sm text-headline-sm text-on-surface outline-none"
+                />
+                <input
+                  type="time"
+                  value={returnTime}
+                  onChange={(e) => setReturnTime(e.target.value)}
+                  aria-label="เวลาคืนรถ"
+                  className="w-[86px] shrink-0 bg-transparent font-headline-sm text-headline-sm text-on-surface outline-none"
+                />
+              </div>
             </div>
           </div>
+          </div>
+
+          <div className="flex items-center gap-2 rounded-lg bg-surface-container p-2">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-primary">
+              <span className="material-symbols-outlined text-[18px]">
+                location_on
+              </span>
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <label
+                htmlFor="pickup-branch"
+                className="font-label-sm text-label-sm uppercase tracking-wider text-tertiary"
+              >
+                Pick-up branch
+              </label>
+              <select
+                id="pickup-branch"
+                value={branchId}
+                onChange={(e) => setBranchId(e.target.value)}
+                className="w-full bg-transparent font-headline-sm text-headline-sm text-on-surface outline-none"
+              >
+                <option value="ALL">
+                  ทุกสาขา{branches.length > 0 ? ` (${branches.length})` : ""}
+                </option>
+                {branches.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                    {b.partnerName ? ` · ${b.partnerName}` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="flex items-center justify-between px-1 pt-1">
@@ -305,8 +365,8 @@ export default function RentCarsPage() {
 
           <div className="px-1 font-body-sm text-body-sm text-tertiary">
             {pickupDate && returnDate
-              ? `${formatDate(pickupDate)} 10:00 → ${formatDate(returnDate)} 10:00`
-              : "เลือกวันรับรถและวันคืนรถ"}
+              ? `${formatDate(pickupDate)} ${pickupTime} → ${formatDate(returnDate)} ${returnTime}`
+              : "เลือกวันและเวลารับรถ-คืนรถ"}
           </div>
         </div>
 

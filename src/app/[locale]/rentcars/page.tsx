@@ -75,6 +75,11 @@ export default function RentCarsPage() {
   const [vehicles, setVehicles] = useState<VehicleListItem[]>([]);
   const [category, setCategory] = useState("ALL");
   const [branchId, setBranchId] = useState("ALL");
+  const [q, setQ] = useState("");
+  const [qDebounced, setQDebounced] = useState("");
+  const [transmission, setTransmission] = useState("ALL");
+  const [minSeats, setMinSeats] = useState("0");
+  const [maxPrice, setMaxPrice] = useState("");
   const [pickupDate, setPickupDate] = useState("");
   const [pickupTime, setPickupTime] = useState("10:00");
   const [returnDate, setReturnDate] = useState("");
@@ -92,6 +97,12 @@ export default function RentCarsPage() {
   const pickupAtIso = pickupDate === "" ? "" : toIso(pickupDate, pickupTime);
   const dropoffAtIso = returnDate === "" ? "" : toIso(returnDate, returnTime);
   const days = dayCount(pickupAtIso, dropoffAtIso);
+
+  // หน่วงการค้นหาข้อความ 400ms เพื่อไม่ยิง API ทุกตัวอักษร
+  useEffect(() => {
+    const timer = setTimeout(() => setQDebounced(q.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [q]);
 
   // ค่าเริ่มต้น: รับรถพรุ่งนี้ คืนอีก 3 วัน
   useEffect(() => {
@@ -122,8 +133,12 @@ export default function RentCarsPage() {
     setError(null);
 
     apiSearchVehicles({
+      q: qDebounced === "" ? undefined : qDebounced,
       category: category === "ALL" ? undefined : category,
       branchId: branchId === "ALL" ? undefined : branchId,
+      transmission: transmission === "ALL" ? undefined : transmission,
+      minSeats: Number(minSeats) > 0 ? Number(minSeats) : undefined,
+      maxPrice: Number(maxPrice) > 0 ? Number(maxPrice) : undefined,
       pickupAt: pickupAtIso,
       dropoffAt: dropoffAtIso,
       size: 50,
@@ -141,7 +156,7 @@ export default function RentCarsPage() {
     return () => {
       active = false;
     };
-  }, [category, branchId, pickupAtIso, dropoffAtIso, days]);
+  }, [category, branchId, qDebounced, transmission, minSeats, maxPrice, pickupAtIso, dropoffAtIso, days]);
 
   // ขอใบเสนอราคาเมื่อเลือกรถ (หรือเปลี่ยนวันเวลา)
   useEffect(() => {
@@ -412,6 +427,55 @@ export default function RentCarsPage() {
               {c.name}
             </button>
           ))}
+        </div>
+
+        {/* Advanced filters */}
+        <div className="mb-1 grid w-full grid-cols-2 gap-2 md:grid-cols-4">
+          <label className="flex h-10 items-center gap-1.5 rounded-xl bg-surface-container-lowest px-3 shadow-sm">
+            <span className="material-symbols-outlined text-[18px] text-tertiary">search</span>
+            <input
+              type="search"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="ค้นหายี่ห้อ/รุ่น"
+              aria-label="ค้นหารถ"
+              className="min-w-0 flex-1 bg-transparent font-body-sm text-body-sm text-on-surface outline-none placeholder:text-outline"
+            />
+          </label>
+          <select
+            value={transmission}
+            onChange={(e) => setTransmission(e.target.value)}
+            aria-label="ระบบเกียร์"
+            className="h-10 rounded-xl bg-surface-container-lowest px-2 font-body-sm text-body-sm text-on-surface shadow-sm outline-none"
+          >
+            <option value="ALL">เกียร์: ทั้งหมด</option>
+            <option value="AUTO">เกียร์: อัตโนมัติ</option>
+            <option value="MANUAL">เกียร์: ธรรมดา</option>
+          </select>
+          <select
+            value={minSeats}
+            onChange={(e) => setMinSeats(e.target.value)}
+            aria-label="จำนวนที่นั่งขั้นต่ำ"
+            className="h-10 rounded-xl bg-surface-container-lowest px-2 font-body-sm text-body-sm text-on-surface shadow-sm outline-none"
+          >
+            <option value="0">ที่นั่ง: ไม่จำกัด</option>
+            <option value="4">4 ที่นั่งขึ้นไป</option>
+            <option value="5">5 ที่นั่งขึ้นไป</option>
+            <option value="7">7 ที่นั่งขึ้นไป</option>
+            <option value="10">10 ที่นั่งขึ้นไป</option>
+          </select>
+          <label className="flex h-10 items-center gap-1.5 rounded-xl bg-surface-container-lowest px-3 shadow-sm">
+            <span className="material-symbols-outlined text-[18px] text-tertiary">payments</span>
+            <input
+              type="number"
+              min={0}
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              placeholder="ราคาสูงสุด/วัน"
+              aria-label="ราคาสูงสุดต่อวัน"
+              className="min-w-0 flex-1 bg-transparent font-body-sm text-body-sm text-on-surface outline-none placeholder:text-outline"
+            />
+          </label>
         </div>
 
         {/* Section header */}

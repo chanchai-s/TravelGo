@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   apiCreateSavedAddress,
   apiDeleteSavedAddress,
+  apiMyVehiclePartner,
   apiSavedAddresses,
   apiUpdateSavedAddress,
   type RidePoint,
@@ -41,6 +42,8 @@ export default function ProfilePage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  /** ชื่อบริษัทถ้าบัญชีนี้เป็นพาร์ทเนอร์รถเช่า (ว่าง = ไม่ใช่) */
+  const [partnerName, setPartnerName] = useState("");
   // รูปจาก Google โหลดไม่ขึ้น (เช่น URL หมดอายุ) → กลับไปใช้ตัวอักษรแรก
   const [avatarFailed, setAvatarFailed] = useState(false);
 
@@ -78,6 +81,25 @@ export default function ProfilePage() {
   useEffect(() => {
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  // ตรวจว่าบัญชีนี้เป็นพาร์ทเนอร์รถเช่าที่ผ่านการยืนยันหรือไม่ (403 = ไม่ใช่)
+  useEffect(() => {
+    if (token === null) {
+      setPartnerName("");
+      return;
+    }
+    let alive = true;
+    apiMyVehiclePartner()
+      .then((res) => {
+        if (alive) setPartnerName(String(res.data?.data?.companyName ?? ""));
+      })
+      .catch(() => {
+        if (alive) setPartnerName("");
+      });
+    return () => {
+      alive = false;
+    };
   }, [token]);
 
   const openCreate = () => {
@@ -299,6 +321,17 @@ export default function ProfilePage() {
           <span className="material-symbols-outlined text-[20px] text-primary">payments</span>
           <span className="font-label-md text-label-md text-on-surface">รายได้</span>
         </Link>
+        {partnerName !== "" ? (
+          <Link
+            href="/partner/rentals"
+            className="col-span-2 flex items-center gap-2 rounded-2xl bg-primary p-3"
+          >
+            <span className="material-symbols-outlined text-[20px] text-on-primary">car_rental</span>
+            <span className="font-label-md text-label-md font-bold text-on-primary">
+              คิวงานรถเช่า · {partnerName}
+            </span>
+          </Link>
+        ) : null}
         {user?.role === "ADMIN" ? (
           <Link
             href="/admin/rides"

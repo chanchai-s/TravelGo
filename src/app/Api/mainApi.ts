@@ -322,6 +322,16 @@ export type CreateRentalBookingInput = {
 
 export const apiListVehicleCategories = () => mainApi.get("/vehicle-categories");
 
+export type VehicleBranchItem = {
+  id: string;
+  name: string;
+  address: string;
+  partnerName: string | null;
+  vehicleCount: number;
+};
+
+export const apiListVehicleBranches = () => mainApi.get("/vehicle-branches");
+
 export const apiSearchVehicles = (params: VehicleSearchApiParams) =>
   mainApi.get("/vehicles", { params });
 
@@ -341,6 +351,77 @@ export const apiCreateRentalBooking = (data: CreateRentalBookingInput) =>
 
 export const apiCancelRentalBooking = (bookingId: string) =>
   mainApi.post(`/bookings/rental/${bookingId}/cancel`);
+
+// ---------- Partner: จัดการออเดอร์รถเช่า ----------
+
+export type RentalPaymentMethod = "CASH" | "CARD" | "TRANSFER";
+
+export type PartnerRentalItem = {
+  id: string;
+  status: string;
+  pickupAt: string;
+  dropoffAt: string;
+  days: number;
+  pricePerDay: number;
+  depositAmount: number;
+  depositStatus?: string | null;
+  driverName: string | null;
+  driverPhone: string | null;
+  notes: string | null;
+  lateFee?: number;
+  rejectedReason?: string | null;
+  booking: {
+    id: string;
+    ref: string;
+    status: string;
+    totalPrice: number;
+    createdAt: string;
+    user: { id: string; name: string | null; email: string; phone: string | null } | null;
+  } | null;
+  vehicle: { id: string; name: string; licensePlate: string | null; imageUrl: string | null } | null;
+  branch: { id: string; name: string } | null;
+};
+
+export type PartnerRentalPage = {
+  items: PartnerRentalItem[];
+  total: number;
+  page: number;
+  size: number;
+  totalPages: number;
+};
+
+/** ข้อมูลพาร์ทเนอร์ของบัญชีที่ล็อกอิน (403 = ยังไม่ได้เป็นพาร์ทเนอร์) */
+export const apiMyVehiclePartner = () => mainApi.get("/partner/me");
+
+export const apiPartnerRentals = (params: { status?: string; page?: number; size?: number }) =>
+  mainApi.get("/partner/bookings", { params });
+
+export const apiPartnerApproveRental = (rentalId: string) =>
+  mainApi.post(`/partner/bookings/${rentalId}/approve`);
+
+export const apiPartnerRejectRental = (rentalId: string, reason: string) =>
+  mainApi.post(`/partner/bookings/${rentalId}/reject`, { reason });
+
+export const apiPartnerPayAtBranch = (
+  rentalId: string,
+  data: { method?: RentalPaymentMethod; receivedBy?: string; receiptNo?: string },
+) => mainApi.post(`/partner/bookings/${rentalId}/pay-at-branch`, data);
+
+export const apiPartnerPickupRental = (
+  rentalId: string,
+  data: { mileageOut?: number; fuelOut?: string },
+) => mainApi.post(`/partner/bookings/${rentalId}/pickup`, data);
+
+export const apiPartnerReturnRental = (
+  rentalId: string,
+  data: { mileageIn?: number; fuelIn?: string; method?: RentalPaymentMethod; receivedBy?: string },
+) => mainApi.post(`/partner/bookings/${rentalId}/return`, data);
+
+export const apiPartnerCompleteRental = (rentalId: string) =>
+  mainApi.post(`/partner/bookings/${rentalId}/complete`);
+
+export const apiPartnerNoShowRental = (rentalId: string, notes?: string) =>
+  mainApi.post(`/partner/bookings/${rentalId}/no-show`, notes ? { notes } : {});
 
 // ---------- Ride / Parcel / Logistics (โดเมนแยกจาก transport) ----------
 
